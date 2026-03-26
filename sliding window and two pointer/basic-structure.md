@@ -7,5 +7,5 @@ In a standard sliding window, you should always follow this exact sequence:
 - Update: Now that you are 100% sure the window `[i, j]` is valid, calculate its length `(j - i + 1)` and update `max_len`.
 
 ```
-Expand &rarr; Shrink &rarr; Update
+Expand -> Shrink -> Update
 ```
