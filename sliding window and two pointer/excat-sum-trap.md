@@ -46,3 +46,46 @@ public:
     }
 };
 ```
+
+### The "Prefix Count" Trick
+To do this in one pass, we use a single sliding window and a count variable.
+
+Here is the secret sauce:
+
+- When your window has exactly `k` odd numbers, you shrink the left side (i++) as much as possible, counting how many times you can shrink it before losing an odd number. (This is essentially counting the leading even numbers).
+
+- You store that number in a `count` variable and add it to your answer.
+
+- If your right pointer `j` hits another even number later, you don't need to recalculate anything! You just add that exact same count to your answer again, because trailing evens create the exact same number of valid subarrays as the core window.
+
+```
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int i = 0, j = 0, odd_count = 0, count = 0, ans = 0;
+
+        while (j < nums.size()) {
+            if (nums[j] % 2 != 0) {
+                odd_count++;
+                count = 0; // Reset our valid subarray counter when we hit a new odd number
+            }
+
+            // When we have exactly 'k' odds, count how many valid left-boundaries exist
+            while (odd_count == k) {
+                count++; // Count this valid window configuration
+                
+                if (nums[i] % 2 != 0) {
+                    odd_count--; // If we drop an odd number, we break out of the while loop
+                }
+                i++; // Shrink from the left
+            }
+
+            // Add the valid subarrays found for this specific right edge (j)
+            ans += count; 
+            j++;
+        }
+
+        return ans;
+    }
+};
+```
